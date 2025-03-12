@@ -94,6 +94,7 @@
             max-width: 800px;
             width: 100%;
             padding: 0 20px;
+            position: relative;
         }
         
         h1 {
@@ -101,11 +102,24 @@
             font-weight: 700;
             margin-bottom: 1rem;
             line-height: 1.2;
-            background: linear-gradient(90deg, #000000, #888888);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #000;
             letter-spacing: -0.02em;
+            transition: all 0.4s ease;
+            background-clip: text;
+            -webkit-background-clip: text;
+            position: relative;
+            background-image: radial-gradient(
+                circle at var(--x, 50%) var(--y, 50%), 
+                #888888 0%, 
+                #000000 50%
+            );
+            background-size: 100% 100%;
+            background-position: var(--x, 50%) var(--y, 50%);
+        }
+        
+        h1.hovered {
+            color: transparent;
+            -webkit-text-fill-color: transparent;
         }
         
         footer {
@@ -167,5 +181,38 @@
             <p>&copy; 2024 Carlos Ferreira. All rights reserved.</p>
         </footer>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const title = document.querySelector('h1');
+            
+            // Set initial position at center
+            title.style.setProperty('--x', '50%');
+            title.style.setProperty('--y', '50%');
+            
+            title.addEventListener('mousemove', (e) => {
+                // Get the position of the cursor relative to the title element
+                const rect = title.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                
+                // Set CSS variables for the gradient position
+                title.style.setProperty('--x', `${x}%`);
+                title.style.setProperty('--y', `${y}%`);
+            });
+            
+            title.addEventListener('mouseenter', () => {
+                title.classList.add('hovered');
+            });
+            
+            title.addEventListener('mouseleave', () => {
+                // Simply remove the hover class without repositioning
+                // This keeps the gradient at its last position as it fades out
+                setTimeout(() => {
+                    title.classList.remove('hovered');
+                }, 50);
+            });
+        });
+    </script>
 </body>
 </html>
