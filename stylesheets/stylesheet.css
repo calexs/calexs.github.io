@@ -49,7 +49,7 @@ nav {
 
 .nav-list a {
     text-decoration: none;
-    color: #333;
+    color: var(--nav-text-color);
     font-weight: 500;
     font-size: 0.95rem;
     letter-spacing: 0.02em;
@@ -64,12 +64,12 @@ nav {
     height: 2px;
     bottom: -4px;
     left: 0;
-    background: linear-gradient(90deg, #333333, #888888);
+    background: linear-gradient(90deg, var(--gradient-dark), var(--gradient-light));
     transition: width 0.3s ease;
 }
 
 .nav-list a:hover {
-    color: #555;
+    color: var(--text-color);
 }
 
 .nav-list a:hover:after {
@@ -97,15 +97,17 @@ h1 {
     font-weight: 700;
     margin-bottom: 1rem;
     line-height: 1.2;
-    color: #000;
+    color: var(--text-color);
     letter-spacing: -0.02em;
     transition: all 0.4s ease;
     background-clip: text;
     -webkit-background-clip: text;
     position: relative;
-    background-image: radial-gradient(circle at var(--x, 50%) var(--y, 50%),
-            #888888 0%,
-            #000000 50%);
+    background-image: radial-gradient(
+        circle at var(--x, 50%) var(--y, 50%),
+        var(--gradient-light) 0%,
+        var(--gradient-dark) 30%
+    );
     background-size: 100% 100%;
     background-position: var(--x, 50%) var(--y, 50%);
 }
@@ -150,4 +152,87 @@ footer {
         flex-wrap: wrap;
         justify-content: center;
     }
+}
+
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --nav-text-color: #333333;
+    --toggle-bg: #cccccc;
+    --toggle-thumb: #333333;
+    --gradient-light: #888888;
+    --gradient-dark: #000000;
+    --transition-speed: 0.3s;
+}
+
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --nav-text-color: #dddddd;
+    --toggle-bg: #555555;
+    --toggle-thumb: #ffffff;
+    --gradient-light: #888888;
+    --gradient-dark: #444444;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color var(--transition-speed) ease,
+        color var(--transition-speed) ease;
+}
+
+/* Theme toggle styling */
+.theme-toggle-container {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    height: 24px;
+    position: relative;
+}
+
+.toggle-track {
+    width: 45px;
+    height: 22px;
+    border-radius: 30px;
+    background-color: var(--toggle-bg);
+    transition: background-color var(--transition-speed) ease;
+    position: relative;
+}
+
+.toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--toggle-thumb);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform var(--transition-speed) ease;
+}
+
+[data-theme="dark"] .toggle-thumb {
+    transform: translateX(23px);
+}
+
+a {
+    color: var(--nav-text-color);
+    transition: color var(--transition-speed) ease;
+}
+
+/* Additional styling for dark mode hover effect */
+[data-theme="dark"] h1.hovered {
+    background-image: radial-gradient(
+        circle at var(--x, 50%) var(--y, 50%),
+        var(--gradient-dark) 0%,
+        var(--gradient-light) 30%
+    );
 }
