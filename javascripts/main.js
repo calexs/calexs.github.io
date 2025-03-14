@@ -60,17 +60,40 @@ document.addEventListener('DOMContentLoaded', () => {
             title.style.setProperty('--x', `${x}%`);
             title.style.setProperty('--y', `${y}%`);
         });
-
+        
+        // Restore mouseenter event
         title.addEventListener('mouseenter', () => {
             title.classList.add('hovered');
         });
-
+        
+        // Add mouseleave event without removing the class
         title.addEventListener('mouseleave', () => {
-            // Simply remove the hover class without repositioning
-            // This keeps the gradient at its last position as it fades out
-            setTimeout(() => {
-                title.classList.remove('hovered');
-            }, 50);
+            // Remove the hovered class when mouse leaves
+            title.classList.remove('hovered');
+        });
+        
+        // Track cursor position even when outside the element
+        document.addEventListener('mousemove', (e) => {
+            const rect = title.getBoundingClientRect();
+            
+            // Check if cursor is over or near the title
+            if (e.clientX >= rect.left - 100 && 
+                e.clientX <= rect.right + 100 && 
+                e.clientY >= rect.top - 100 && 
+                e.clientY <= rect.bottom + 100) {
+                
+                // Calculate relative position
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                
+                // Clamp values between 0 and 100
+                const clampedX = Math.min(100, Math.max(0, x));
+                const clampedY = Math.min(100, Math.max(0, y));
+                
+                // Update gradient position
+                title.style.setProperty('--x', `${clampedX}%`);
+                title.style.setProperty('--y', `${clampedY}%`);
+            }
         });
     }
     // For mobile: initialize device orientation if supported
@@ -105,4 +128,28 @@ document.addEventListener('DOMContentLoaded', () => {
             requestDeviceMotionPermission();
         }
     }
+
+    const themeToggle = document.querySelector('.theme-toggle');
+    
+    // Check for saved theme preference or use OS preference
+    const savedTheme = localStorage.getItem('theme') || 
+                       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    
+    // Apply the saved or OS-preferred theme
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Toggle theme when button is clicked
+    themeToggle.addEventListener('click', () => {
+        // Get current theme
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        
+        // Switch to other theme
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        // Save the new theme preference
+        localStorage.setItem('theme', newTheme);
+        
+        // Apply the new theme
+        document.documentElement.setAttribute('data-theme', newTheme);
+    });
 });
